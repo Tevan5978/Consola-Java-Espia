@@ -39,27 +39,25 @@ public class CasoDetective {
         System.out.println("\nCuantas pistas iniciales tienes:");
         int pistas = teclado.nextInt();
 
-        if (pistas > 5) {
-            System.out.println("¡Eres un detective legendario!");
-        } else if (pistas == 5) {
-            System.out.println("Eres un detective EXPERTO!\nPuedes resolver el caso.");
-        } else if (pistas >= 2) {
-            System.out.println("Buen trabajo, detective.\nNecesitas unas pistas mas.");
-        } else if (pistas == 1) {
-            System.out.println("Vas por buen camino...\nSigue investigando!");
-        } else {
-            System.out.println("No tienes pistas o el valor es inválido.");
-        }
-
         int opcion;
         boolean casoResuelto = false;
         int puntaje = 0;
+        int intentos = 0;
+
+        String historial = "";
 
         String[] sospechososArr = {
             "James Barnes", 
             "Aurelio Vásquez", 
             "Victoria Reyes", 
             "Bruno Quiroga"
+        };
+
+        String[] personalidad = {
+            "Nervioso, evita el contacto visual.",
+            "Muy seguro, habla con firmeza.",
+            "Tranquila pero misteriosa.",
+            "Agresivo, responde de mala gana."
         };
 
         do {
@@ -83,20 +81,15 @@ public class CasoDetective {
                         "Cuchillo en la cocina"
                     };
                     
-                    if (pistas >= evidencias.length) {
-                        System.out.println(">> ¡Ya has encontrado todas las pistas disponibles!");
-                    } else {
-                        int i = 0;
-                        while (i < evidencias.length) {
-                            System.out.println(" Pista encontrada: " + evidencias[i]);
-                            i++;
-                        }
-                        pistas = evidencias.length;
-                        System.out.println(">> ¡Has recolectado todas las pistas!");
+                    for (int i = 0; i < evidencias.length; i++) {
+                        System.out.println(" Pista encontrada: " + evidencias[i]);
                     }
 
+                    pistas = evidencias.length;
                     puntaje += 10;
-                    System.out.println("Total de pistas actuales: " + pistas);
+                    historial += "Buscó pistas\n";
+
+                    System.out.println("Total de pistas: " + pistas);
                     break;
                     
                 case 2:
@@ -104,25 +97,26 @@ public class CasoDetective {
                     
                     for (int s = 0; s < sospechososArr.length; s++) {
                         System.out.println(" Interrogando a: " + sospechososArr[s]);
-                        System.out.println(" Dice que es inocente...");
+                        System.out.println(" Personalidad: " + personalidad[s]);
+                        System.out.println(" Dice: 'Soy inocente'\n");
                     }
 
                     puntaje += 5;
-                    System.out.println(" Todos los sospechosos han sido interrogados.");
+                    historial += "Interrogó sospechosos\n";
                     break;
                         
                 case 3:
                     System.out.println("\n RESOLUCIÓN DEL CASO");
 
                     if (pistas >= 3) {
-                        System.out.println(" ¡Tienes suficientes pistas!");
+                        intentos++;
+                        historial += "Intentó resolver el caso\n";
 
                         System.out.println("¿A quién acusas?");
                         for (int i = 0; i < sospechososArr.length; i++) {
                             System.out.println((i + 1) + ". " + sospechososArr[i]);
                         }
 
-                        System.out.print("Elige una opción: ");
                         int eleccion = teclado.nextInt();
 
                         if (eleccion < 1 || eleccion > sospechososArr.length) {
@@ -134,14 +128,13 @@ public class CasoDetective {
 
                         System.out.println(" Has acusado a: " + culpable);
                         System.out.println(" ¡El culpable es: " + culpable + "!");
-                        System.out.println(" ¡CASO RESUELTO, detective " + nombre + "!");
+                        System.out.println(" ¡CASO RESUELTO!");
 
                         puntaje += 20;
                         casoResuelto = true;
 
                     } else {
-                        System.out.println(" Tienes " + pistas + " pista(s). Necesitas al menos 3.");
-                        System.out.println(" Regresa al menú y busca más pistas.");
+                        System.out.println("Necesitas más pistas.");
                     }
                     break;
                             
@@ -152,17 +145,23 @@ public class CasoDetective {
             
         } while (!casoResuelto); 
         
-        System.out.println("\n--- RESULTADO FINAL ---");
-        System.out.println("Puntaje total: " + puntaje);
+        // RESULTADOS FINALES
+        System.out.println("\n--- HISTORIAL DE ACCIONES ---");
+        System.out.println(historial);
 
-        if (puntaje >= 40) {
-            System.out.println("Rango: Detective Legendario");
-        } else if (puntaje >= 25) {
-            System.out.println("Rango: Detective Experto");
-        } else if (puntaje >= 10) {
-            System.out.println("Rango: Detective en entrenamiento");
+        System.out.println("--- RESULTADO FINAL ---");
+        System.out.println("Puntaje: " + puntaje);
+        System.out.println("Intentos: " + intentos);
+
+        // FINALES MÚLTIPLES
+        if (puntaje >= 40 && intentos == 1) {
+            System.out.println("FINAL PERFECTO: Eres un detective legendario.");
+        } else if (puntaje >= 30) {
+            System.out.println("FINAL BUENO: Caso resuelto con éxito.");
+        } else if (puntaje >= 15) {
+            System.out.println("FINAL REGULAR: Resolviste el caso, pero con dudas.");
         } else {
-            System.out.println("Rango: Novato");
+            System.out.println("FINAL MALO: Caso resuelto de manera cuestionable.");
         }
 
         System.out.println("\nGracias por jugar, " + nombre + ". Caso cerrado.");
